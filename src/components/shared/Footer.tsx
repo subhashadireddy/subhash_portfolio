@@ -22,7 +22,6 @@ const Footer = () => {
         hour: '2-digit',
         minute: '2-digit',
         hour12: true,
-        timeZone: 'Asia/Karachi',
       });
       setCurrentTime(timeString);
     };
@@ -139,7 +138,7 @@ const Footer = () => {
               Local Time
             </h3>
             <p className="text-[#6b645c] text-sm sm:text-base font-sans font-medium tracking-wide">
-              {isMounted && currentTime ? `${currentTime} PKT` : 'Loading local time...'}
+              {isMounted && currentTime ? currentTime : 'Loading local time...'}
             </p>
           </div>
         </div>
