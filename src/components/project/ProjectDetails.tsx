@@ -1,0 +1,380 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { Link } from 'next-transition-router';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import AnimatedHeading from '@/components/ui/AnimateHeading';
+import AnimateDescription from '@/components/ui/AnimateDescription';
+import { FaArrowUp, FaGithub, FaExternalLinkAlt, FaTimes, FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { Project } from '@/lib/projects';
+
+export default function ProjectDetails({ project }: { project: Project }) {
+  const detailsRef = useRef<HTMLDivElement>(null);
+  const revealedRef = useRef<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (!detailsRef.current) return;
+    const allContainers = detailsRef.current.querySelectorAll('.image-reveal-container');
+    const allImgs = detailsRef.current.querySelectorAll('.image-reveal-container img');
+    gsap.set(allContainers, {
+      clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+    });
+    gsap.set(allImgs, {
+      scale: 1.15,
+    });
+    ScrollTrigger.getAll().forEach((st) => {
+      if (st.vars?.id?.startsWith?.('img-reveal-')) {
+        st.kill();
+      }
+    });
+    const currentRevealed = revealedRef.current;
+    return () => {
+      currentRevealed.clear();
+    };
+  }, [project.slug]);
+  useGSAP(
+    () => {
+      if (!detailsRef.current) return;
+      gsap.fromTo(
+        detailsRef.current.querySelectorAll('.fade-up-item'),
+        {
+          y: 30,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power2.out',
+        },
+      );
+      const containers = detailsRef.current.querySelectorAll('.image-reveal-container');
+      containers.forEach((container, idx) => {
+        const img = container.querySelector('img');
+        const rect = container.getBoundingClientRect();
+        const alreadyVisible = rect.top < window.innerHeight * 0.9;
+        if (alreadyVisible) {
+          const tl = gsap.timeline();
+          tl.to(container, {
+            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+            duration: 1.2,
+            ease: 'power4.inOut',
+          });
+          if (img) {
+            tl.to(img, {
+              scale: 1,
+              duration: 1.6,
+              ease: 'power3.out',
+            }, '<');
+          }
+          revealedRef.current.add(idx);
+        } else {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              id: `img-reveal-${idx}`,
+              trigger: container,
+              start: 'top 85%',
+              once: true,
+              onEnter: () => revealedRef.current.add(idx),
+            },
+          });
+          tl.fromTo(
+            container,
+            {
+              clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+            },
+            {
+              clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+              duration: 1.2,
+              ease: 'power4.inOut',
+            }
+          );
+          if (img) {
+            tl.fromTo(
+              img,
+              {
+                scale: 1.15,
+              },
+              {
+                scale: 1,
+                duration: 1.6,
+                ease: 'power3.out',
+              },
+              '<'
+            );
+          }
+        }
+      });
+      const fallbackTimer = setTimeout(() => {
+        if (!detailsRef.current) return;
+        const clipped = detailsRef.current.querySelectorAll('.image-reveal-container');
+        clipped.forEach((c, idx) => {
+          if (!revealedRef.current.has(idx)) {
+            gsap.to(c, {
+              clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+              duration: 0.6,
+              ease: 'power2.out',
+            });
+            const i = c.querySelector('img');
+            if (i)
+              gsap.to(i, {
+                scale: 1,
+                duration: 0.8,
+                ease: 'power2.out',
+              });
+            revealedRef.current.add(idx);
+          }
+        });
+      }, 2000);
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 200);
+      return () => clearTimeout(fallbackTimer);
+    },
+    {
+      scope: detailsRef,
+      dependencies: [project.slug],
+    },
+  );
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+  const handleImageEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const img = e.currentTarget.querySelector('img');
+    if (img) {
+      gsap.to(img, {
+        scale: 1.04,
+        duration: 0.4,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    }
+  };
+  const handleImageLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const img = e.currentTarget.querySelector('img');
+    if (img) {
+      gsap.to(img, {
+        scale: 1,
+        duration: 0.4,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    }
+  };
+  return (
+    <section ref={detailsRef} className="min-h-screen bg-[#080807] text-white px-6 md:px-48 py-10">
+      <div className="fade-up-item">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-3 text-[#a29e9a] hover:text-white transition-all duration-300 group mb-12"
+        >
+          <span className="text-lg md:text-2xl transform group-hover:-translate-x-1 transition-transform duration-300">
+            ←
+          </span>
+          <span className="text-sm md:text-lg font-medium">Back</span>
+        </Link>
+      </div>
+
+      <div className="mb-6 fade-up-item">
+        <div className="flex items-start justify-between gap-6 mb-6 md:mb-0">
+          <div className="flex items-center gap-4 flex-wrap flex-1">
+            <AnimatedHeading
+              text={project.title}
+              className="text-[clamp(1.8rem,7vw,3rem)] md:text-7xl font-extrabold"
+            />
+            {(project.keyFeatures?.length || project.roleModules?.length) ? (
+              <Link
+                href={`/projects/${project.slug}/details`}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold rounded-full bg-[#1a1a18] border border-[#2a2a28] text-[#a29e9a] hover:text-white hover:border-[#0c6145] hover:bg-[#0c6145]/10 transition-all duration-300 shadow-md cursor-pointer"
+              >
+                <FaInfoCircle className="text-sm text-[#0c6145]" />
+                <span>Know More →</span>
+              </Link>
+            ) : null}
+          </div>
+
+          <div className="hidden md:flex gap-4 pt-2">
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 rounded-full bg-[#1a1a18] border border-[#2a2a28] flex items-center justify-center text-[#a29e9a] hover:text-white hover:border-[#3a3a38] hover:bg-[#252523] transition-all duration-300"
+                aria-label="GitHub Repository"
+              >
+                <FaGithub className="text-2xl" />
+              </a>
+            )}
+            {project.liveUrl ? (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 rounded-full bg-[#1a1a18] border border-[#2a2a28] flex items-center justify-center text-[#a29e9a] hover:text-white hover:border-[#3a3a38] hover:bg-[#252523] transition-all duration-300"
+                aria-label="Live Demo"
+              >
+                <FaExternalLinkAlt className="text-xl" />
+              </a>
+            ) : (
+              <div
+                className="w-14 h-14 rounded-full bg-[#1a1a18] border border-[#2a2a28] flex items-center justify-center text-[#a29e9a]/50 cursor-not-allowed"
+                title="Live Demo"
+                aria-label="Live Demo"
+              >
+                <FaExternalLinkAlt className="text-xl" />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex md:hidden gap-4 mt-4">
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 rounded-full bg-[#1a1a18] border border-[#2a2a28] flex items-center justify-center text-[#a29e9a] hover:text-white hover:border-[#3a3a38] hover:bg-[#252523] transition-all duration-300"
+              aria-label="GitHub Repository"
+            >
+              <FaGithub className="text-xl" />
+            </a>
+          )}
+          {project.liveUrl ? (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 rounded-full bg-[#1a1a18] border border-[#2a2a28] flex items-center justify-center text-[#a29e9a] hover:text-white hover:border-[#3a3a38] hover:bg-[#252523] transition-all duration-300"
+              aria-label="Live Demo"
+            >
+              <FaExternalLinkAlt className="text-lg" />
+            </a>
+          ) : (
+            <div
+              className="w-12 h-12 rounded-full bg-[#1a1a18] border border-[#2a2a28] flex items-center justify-center text-[#a29e9a]/50 cursor-not-allowed"
+              title="Live Demo"
+              aria-label="Live Demo"
+            >
+              <FaExternalLinkAlt className="text-lg" />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-6 mt-4 fade-up-item">
+        <strong className="text-sm sm:text-base md:text-xl font-bold block mb-1">Tech Stack</strong>
+        <AnimateDescription
+          text={project.tech?.join(', ')}
+          className="text-sm sm:text-base md:text-lg text-[#a29e9a] font-sans"
+        />
+      </div>
+
+      <div className="mb-6 fade-up-item">
+        <strong className="text-sm sm:text-base md:text-xl font-bold block mb-1">Description</strong>
+        <AnimateDescription
+          text={project.description}
+          className="text-sm sm:text-base md:text-lg text-[#a29e9a] font-sans"
+        />
+      </div>
+
+      {project.myRole?.length > 0 && (
+        <div className="mb-10 fade-up-item">
+          <strong className="text-sm sm:text-base md:text-xl font-bold block mb-1">My Role</strong>
+          <ul className="list-disc list-inside text-[#a29e9a] font-sans mt-2 space-y-2">
+            {project.myRole.map((role, i) => (
+              <li key={i} className="text-sm sm:text-base md:text-lg">
+                {role}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-12 mb-16">
+        {project.images?.map((img, i) => (
+          <div
+            key={`${project.slug}-img-${i}`}
+            className="image-reveal-container overflow-hidden rounded-xl bg-[#1a1a18] relative aspect-[16/10] max-h-[750px] w-full"
+            style={{
+              clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+            }}
+          >
+            <a
+              href={img}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full h-full relative"
+              onMouseEnter={handleImageEnter}
+              onMouseLeave={handleImageLeave}
+            >
+              <Image
+                src={img}
+                alt={`${project.title} screenshot ${i + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 1200px"
+                priority={i === 0}
+                className="object-contain w-full h-full"
+                style={{
+                  willChange: 'transform, clip-path',
+                }}
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFhMTkxNyIvPjwvc3ZnPg=="
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement | null;
+                  if (target) {
+                    const container = target.closest('.image-reveal-container');
+                    if (container) {
+                      gsap.set(container, {
+                        clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+                      });
+                    }
+                    target.style.opacity = '0';
+                  }
+                }}
+              />
+            </a>
+            <div
+              className="absolute inset-0 flex items-center justify-center bg-[#111110] pointer-events-none"
+              aria-hidden="true"
+              style={{
+                zIndex: -1,
+              }}
+            >
+              <span className="text-[#2a2a28] font-mono text-xs tracking-widest uppercase">
+                Image unavailable
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative flex justify-center py-8 fade-up-item">
+        <div className="text-center">
+          <p className="text-[#a29e9a] text-lg">Have a project in mind?</p>
+          <a
+            href="mailto:subhashadireddy@gmail.com"
+            className="text-xl font-semibold text-[#bab6b3] hover:text-[#d4d2d0] transition"
+          >
+            subhashadireddy@gmail.com
+          </a>
+        </div>
+
+        <button
+          onClick={scrollToTop}
+          className="absolute right-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1a1a18] border border-[#2a2a28] flex items-center justify-center text-[#a29e9a] hover:text-[#0c6145] hover:border-[#0c6145] hover:bg-[#0c6145]/10 transition-all duration-300 group focus:outline-none"
+          aria-label="Scroll to top"
+        >
+          <FaArrowUp className="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:-translate-y-1 transition-transform duration-300" />
+        </button>
+      </div>
+    </section>
+  );
+}
