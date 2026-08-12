@@ -130,6 +130,11 @@ const Footer = () => {
                   Github
                 </a>
               </AnimatedLink>
+              <AnimatedLink>
+                <a href="/subhash.pdf" target="_blank" rel="noopener noreferrer">
+                  Resume
+                </a>
+              </AnimatedLink>
             </ul>
           </div>
 

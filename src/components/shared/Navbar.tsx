@@ -418,6 +418,10 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ isOpen, isTransitioning
                 label: 'LinkedIn',
                 href: 'https://www.linkedin.com/in/subhashadireddy/',
               },
+              {
+                label: 'Resume',
+                href: '/subhash.pdf',
+              },
             ].map((s) => (
               <a
                 key={s.label}
