@@ -26,6 +26,10 @@ const STACK_SECTIONS = [
         icon: '/Services/js.png',
       },
       {
+        name: 'TypeScript',
+        icon: '/Services/typescript.svg',
+      },
+      {
         name: 'React',
         icon: '/Services/react.png',
       },
@@ -36,6 +40,14 @@ const STACK_SECTIONS = [
       {
         name: 'Tailwind CSS',
         icon: '/Services/tailwind.png',
+      },
+      {
+        name: 'Redux',
+        icon: '/Services/redux.png',
+      },
+      {
+        name: 'Recharts',
+        icon: '/Services/recharts.svg',
       },
     ],
   },
@@ -52,8 +64,26 @@ const STACK_SECTIONS = [
         icon: '/Services/express.png',
       },
       {
+        name: 'Mongoose',
+        icon: '/Services/mongoose.svg',
+      },
+      {
         name: 'JWT',
         icon: '/Services/jwt.svg',
+      },
+      {
+        name: 'Firebase',
+        icon: '/Services/firebase.svg',
+      },
+    ],
+  },
+  {
+    id: 'ai',
+    title: 'AI & INTELLIGENCE',
+    technologies: [
+      {
+        name: 'Google Gemini AI',
+        icon: '/Services/gemini.svg',
       },
     ],
   },
