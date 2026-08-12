@@ -3,6 +3,18 @@ export interface RoleModule {
   items: string[];
 }
 
+export interface TechStackCategory {
+  category: string;
+  items: string[];
+}
+
+export interface ZeroStorageConcept {
+  title: string;
+  description: string;
+  flow: string[];
+  persistedItems: string[];
+}
+
 export interface Project {
   id: number;
   slug: string;
@@ -13,6 +25,9 @@ export interface Project {
   myRole: string[];
   keyFeatures?: string[];
   roleModules?: RoleModule[];
+  techCategories?: TechStackCategory[];
+  pipelineSteps?: string[];
+  zeroStorageConcept?: ZeroStorageConcept;
   images: string[];
   hoverImage: string;
   github: string;
@@ -22,6 +37,129 @@ export interface Project {
 const projects: Project[] = [
   {
     id: 1,
+    slug: 'papertrail-ai',
+    title: 'PAPERTRAIL AI',
+    year: '2026',
+    tech: [
+      'Next.js',
+      'TypeScript',
+      'Tailwind CSS',
+      'MongoDB',
+      'MongoDB Atlas',
+      'Mongoose',
+      'Firebase Authentication',
+      'Google Gemini AI',
+      'Gemini Vision',
+      'REST APIs',
+      'Vercel',
+      'Zero-Storage Processing',
+    ],
+    description:
+      'PaperTrail AI is a full-stack AI-powered document intelligence platform designed to transform unstructured business documents into structured, actionable intelligence.\n\nUsers can upload documents such as PDFs and images, which are processed in memory using Google Gemini Vision AI. The system analyzes the document and extracts important business information including obligations, deadlines, payment amounts, contacts, organizations, risks, recommendations, and actionable tasks.\n\nInstead of simply storing uploaded files, PaperTrail AI converts documents into structured intelligence that can be searched, tracked, scheduled, and acted upon through a centralized operations dashboard.\n\nThe platform is designed around a privacy-focused zero-storage workflow where original uploaded documents are processed temporarily in memory and discarded after analysis. Only the structured metadata and extracted intelligence required by the application are persisted in MongoDB Atlas.',
+    myRole: [
+      'Designed and developed the complete PaperTrail AI full-stack application from architecture and UI design through deployment.',
+      'Built the document upload and in-memory processing workflow for PDF and image-based documents.',
+      'Integrated Google Gemini Vision AI for multimodal document analysis and structured information extraction.',
+      'Designed MongoDB Atlas schemas for documents, tasks, notifications, users, and audit records.',
+      'Implemented Firebase Authentication and protected application routes.',
+      'Built automated extraction of obligations, deadlines, payment information, contacts, organizations, risks, recommendations, and action items.',
+      'Implemented an action-item lifecycle with pending, completed, and archived states.',
+      'Built deadline-aware notifications and an action calendar for extracted obligations.',
+      'Implemented document deletion with cascading removal of linked tasks and notifications.',
+      'Implemented zero-storage document processing so original uploaded files are not permanently stored.',
+      'Built dashboard telemetry showing scanned documents, pending actions, completed actions, and active notifications.',
+      'Added document search, task search, AI-assisted document interaction, and audit-trail functionality.',
+      'Built responsive interfaces for desktop, tablet, and mobile layouts.',
+      'Deployed the production application using Vercel and connected it to MongoDB Atlas and Firebase.',
+    ],
+    keyFeatures: [
+      'AI Document Intelligence — Upload business documents and automatically extract meaningful structured information using Gemini Vision AI.',
+      'Multimodal Document Processing — Support PDF and image-based documents such as PNG, JPG and JPEG.',
+      'Obligation Extraction — Identify important contractual or business obligations automatically.',
+      'Deadline Detection — Extract dates, renewal dates, due dates, and other time-sensitive obligations.',
+      'Payment Intelligence — Detect payment amounts and payment-related obligations from uploaded documents.',
+      'Contact & Organization Extraction — Identify relevant people, organizations, and contact information.',
+      'Risk Detection — Surface important risks, clauses, and potentially critical document conditions.',
+      'Automatic Task Generation — Convert extracted obligations into actionable tasks with descriptions, priority, categories, and due dates.',
+      'Action Lifecycle — Allow tasks to move through pending, completed, and archived states.',
+      'Notifications — Generate notifications for important payment obligations, deadlines, and extracted events.',
+      'Action Calendar — Present extracted deadlines and actions in a calendar-oriented workflow.',
+      'Zero-Storage Processing — Original documents are processed in memory and discarded after analysis. Only structured intelligence and metadata are persisted.',
+      'MongoDB Intelligence Storage — Persist structured document metadata, extracted intelligence, tasks, deadlines, contacts, risks, recommendations, and related information in MongoDB Atlas.',
+      'Document Deletion — Allow users to permanently delete documents and automatically remove their linked tasks and notifications.',
+      'Manual Force Deletion — Provide a clear user-controlled deletion mechanism for permanently removing stored structured records when required.',
+      'AI Chat — Allow users to interact with extracted document intelligence through an AI-assisted interface.',
+      'Audit Trail — Track important application and document-related actions for transparency and accountability.',
+      'Secure Authentication — Use Firebase Authentication and protected application routes to isolate user data.',
+      'Responsive Dashboard — Provide a responsive executive operations dashboard that works across desktop, tablet, and mobile devices.',
+    ],
+    techCategories: [
+      {
+        category: 'Frontend',
+        items: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS'],
+      },
+      {
+        category: 'Backend',
+        items: ['Next.js API Routes / REST APIs', 'Node.js', 'Mongoose'],
+      },
+      {
+        category: 'Database',
+        items: ['MongoDB Atlas'],
+      },
+      {
+        category: 'Authentication',
+        items: ['Firebase Authentication'],
+      },
+      {
+        category: 'AI',
+        items: ['Google Gemini AI', 'Gemini Vision', 'Multimodal document analysis', 'Structured AI extraction'],
+      },
+      {
+        category: 'Deployment',
+        items: ['Vercel'],
+      },
+    ],
+    pipelineSteps: [
+      'Upload Document',
+      'In-Memory Processing',
+      'Gemini Vision AI Analysis',
+      'Structured Intelligence Extraction',
+      'Tasks / Deadlines / Payments / Contacts / Risks',
+      'MongoDB Atlas Persistence',
+      'Dashboard / Notifications / Calendar / Audit Trail',
+      'Original Document Discarded',
+    ],
+    zeroStorageConcept: {
+      title: 'Zero-Storage Document Processing',
+      description:
+        'PaperTrail AI follows a zero-storage approach for original uploaded documents. The uploaded PDF/image exists temporarily in memory during the processing pipeline while Gemini Vision AI analyzes the document and extracts structured intelligence.\n\nAfter processing, the original file is discarded. Only useful structured information is persisted in MongoDB Atlas.',
+      flow: [
+        'Uploaded File',
+        'Temporary in-memory processing',
+        'Gemini AI analysis',
+        'Structured JSON intelligence',
+        'MongoDB Atlas',
+        'Original document discarded',
+      ],
+      persistedItems: [
+        'Document metadata',
+        'Summary',
+        'Extracted obligations',
+        'Deadlines',
+        'Payment information',
+        'Contacts & Organizations',
+        'Tasks',
+        'Risks & Recommendations',
+        'Classification & Confidence scores',
+      ],
+    },
+    images: ['/Projects/PaperTrailAI/1.png'],
+    hoverImage: '/Projects/PaperTrailAI/1.png',
+    github: 'https://github.com/subhashadireddy/PaperTrailAI',
+    liveUrl: 'https://papertrail-ai-gamma.vercel.app/',
+  },
+  {
+    id: 2,
     slug: 'finance',
     title: 'Finance Tracker',
     year: '2026',
@@ -49,7 +187,7 @@ const projects: Project[] = [
     liveUrl: '',
   },
   {
-    id: 2,
+    id: 3,
     slug: 'blog',
     title: 'Blog App',
     year: '2026',
@@ -79,7 +217,7 @@ const projects: Project[] = [
     liveUrl: '',
   },
   {
-    id: 3,
+    id: 4,
     slug: 'railwaygo',
     title: 'RailwayGo',
     year: '2024',
@@ -120,7 +258,7 @@ const projects: Project[] = [
     liveUrl: '',
   },
   {
-    id: 4,
+    id: 5,
     slug: 'campusconnect',
     title: 'CampusConnect',
     year: '2025',

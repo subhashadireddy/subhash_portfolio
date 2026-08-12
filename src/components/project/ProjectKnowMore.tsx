@@ -1,12 +1,22 @@
 'use client';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'next-transition-router';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import AnimateDescription from '@/components/ui/AnimateDescription';
-import { FaArrowUp, FaHome, FaArrowLeft, FaCheckCircle, FaProjectDiagram } from 'react-icons/fa';
+import {
+  FaArrowUp,
+  FaHome,
+  FaArrowLeft,
+  FaCheckCircle,
+  FaProjectDiagram,
+  FaShieldAlt,
+  FaStream,
+  FaGithub,
+  FaExternalLinkAlt,
+} from 'react-icons/fa';
 import { Project } from '@/lib/projects';
 
 gsap.registerPlugin(useGSAP);
@@ -54,13 +64,37 @@ export default function ProjectKnowMore({ project }: { project: Project }) {
           <span className="text-xs sm:text-sm font-medium">Back to Project</span>
         </Link>
 
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2.5 text-[#a29e9a] hover:text-white transition-all duration-300 group px-4 py-2 rounded-full bg-[#1a1a18] border border-[#2a2a28] hover:border-[#3a3a38]"
-        >
-          <FaHome className="text-sm transform group-hover:scale-110 transition-transform duration-300 text-[#0c6145]" />
-          <span className="text-xs sm:text-sm font-medium">Home</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#a29e9a] hover:text-white transition-all duration-300 px-4 py-2 rounded-full bg-[#1a1a18] border border-[#2a2a28] hover:border-[#3a3a38]"
+            >
+              <FaGithub className="text-sm" />
+              <span className="hidden sm:inline">GitHub</span>
+            </a>
+          )}
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#a29e9a] hover:text-white transition-all duration-300 px-4 py-2 rounded-full bg-[#1a1a18] border border-[#2a2a28] hover:border-[#3a3a38]"
+            >
+              <FaExternalLinkAlt className="text-xs" />
+              <span className="hidden sm:inline">Live Demo</span>
+            </a>
+          )}
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2.5 text-[#a29e9a] hover:text-white transition-all duration-300 group px-4 py-2 rounded-full bg-[#1a1a18] border border-[#2a2a28] hover:border-[#3a3a38]"
+          >
+            <FaHome className="text-sm transform group-hover:scale-110 transition-transform duration-300 text-[#0c6145]" />
+            <span className="text-xs sm:text-sm font-medium">Home</span>
+          </Link>
+        </div>
       </div>
 
       {/* Main Title & Subtitle */}
@@ -75,7 +109,7 @@ export default function ProjectKnowMore({ project }: { project: Project }) {
         />
         <AnimateDescription
           text={project.description}
-          className="text-sm sm:text-base md:text-lg text-[#a29e9a] font-sans max-w-4xl"
+          className="text-sm sm:text-base md:text-lg text-[#a29e9a] font-sans max-w-4xl whitespace-pre-line"
         />
       </div>
 
@@ -93,6 +127,122 @@ export default function ProjectKnowMore({ project }: { project: Project }) {
           ))}
         </div>
       </div>
+
+      {/* Categorized Tech Stack Grid */}
+      {project.techCategories && project.techCategories.length > 0 && (
+        <div className="mb-14 fade-up-item">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-6 text-white flex items-center gap-3">
+            <span className="w-3 h-3 rounded-full bg-[#0c6145]"></span>
+            <span>Tech Stack Breakdown</span>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {project.techCategories.map((cat, idx) => (
+              <div
+                key={idx}
+                className="p-6 rounded-2xl bg-[#141413] border border-[#2a2a28] hover:border-[#0c6145]/40 transition-all duration-300"
+              >
+                <h3 className="text-base sm:text-lg font-bold text-white mb-3 flex items-center justify-between border-b border-[#2a2a28] pb-3">
+                  <span>{cat.category}</span>
+                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-[#0c6145]/20 text-[#0c6145] border border-[#0c6145]/30">
+                    Category
+                  </span>
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {cat.items.map((item, itemIdx) => (
+                    <span
+                      key={itemIdx}
+                      className="px-3 py-1 rounded-lg bg-[#1a1a18] border border-[#2a2a28] text-xs sm:text-sm text-[#d4d2d0]"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Document Intelligence Pipeline / Workflow */}
+      {project.pipelineSteps && project.pipelineSteps.length > 0 && (
+        <div className="mb-14 fade-up-item">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-6 text-white flex items-center gap-3">
+            <FaStream className="text-[#0c6145] text-xl" />
+            <span>Document Intelligence Pipeline</span>
+          </h2>
+          <div className="p-6 rounded-2xl bg-[#141413] border border-[#2a2a28]">
+            <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-3">
+              {project.pipelineSteps.map((step, idx) => (
+                <React.Fragment key={idx}>
+                  <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-[#1a1a18] border border-[#2a2a28] text-xs sm:text-sm font-semibold text-[#d4d2d0]">
+                    <span className="w-5 h-5 rounded-full bg-[#0c6145] text-white flex items-center justify-center text-[10px] font-bold">
+                      {idx + 1}
+                    </span>
+                    <span>{step}</span>
+                  </div>
+                  {idx < project.pipelineSteps!.length - 1 && (
+                    <span className="text-[#0c6145] font-bold text-lg hidden md:inline">→</span>
+                  )}
+                  {idx < project.pipelineSteps!.length - 1 && (
+                    <span className="text-[#0c6145] font-bold text-lg md:hidden">↓</span>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Zero Storage Concept & Privacy Data Flow */}
+      {project.zeroStorageConcept && (
+        <div className="mb-14 fade-up-item">
+          <div className="p-6 sm:p-8 rounded-2xl bg-[#141413] border border-[#0c6145]/30">
+            <div className="flex items-center gap-3 mb-4">
+              <FaShieldAlt className="text-[#0c6145] text-2xl" />
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white">
+                {project.zeroStorageConcept.title}
+              </h2>
+            </div>
+            <p className="text-sm sm:text-base text-[#a29e9a] font-sans leading-relaxed mb-6 whitespace-pre-line">
+              {project.zeroStorageConcept.description}
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4 border-t border-[#2a2a28]">
+              {/* Privacy-Focused Data Flow */}
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-[#0c6145] mb-3">
+                  Privacy-Focused Data Flow
+                </h3>
+                <div className="space-y-2.5">
+                  {project.zeroStorageConcept.flow.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-[#d4d2d0]">
+                      <span className="w-5 h-5 rounded-full bg-[#1a1a18] border border-[#0c6145]/40 text-[#0c6145] flex items-center justify-center font-bold text-[10px]">
+                        {idx + 1}
+                      </span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Persisted Intelligence Items */}
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-[#0c6145] mb-3">
+                  Persisted Intelligence (MongoDB Atlas)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {project.zeroStorageConcept.persistedItems.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm text-[#a29e9a]">
+                      <FaCheckCircle className="text-[#0c6145] text-xs shrink-0" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Key Features Section */}
       {project.keyFeatures && project.keyFeatures.length > 0 && (
@@ -150,6 +300,26 @@ export default function ProjectKnowMore({ project }: { project: Project }) {
         </div>
       )}
 
+      {/* My Role & Contributions Section */}
+      {project.myRole && project.myRole.length > 0 && (
+        <div className="mb-16 fade-up-item">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-6 text-white flex items-center gap-3">
+            <span className="w-3 h-3 rounded-full bg-[#0c6145]"></span>
+            <span>My Role & Engineering Contributions</span>
+          </h2>
+          <div className="p-6 rounded-2xl bg-[#141413] border border-[#2a2a28]">
+            <ul className="space-y-3 text-sm sm:text-base text-[#a29e9a] font-sans">
+              {project.myRole.map((role, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="text-[#0c6145] font-bold mt-1">•</span>
+                  <span className="text-[#d4d2d0] leading-relaxed">{role}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
       {/* Footer Navigation */}
       <div className="relative flex justify-center py-12 fade-up-item border-t border-[#2a2a28] mt-12">
         <div className="text-center">
@@ -173,3 +343,4 @@ export default function ProjectKnowMore({ project }: { project: Project }) {
     </section>
   );
 }
+

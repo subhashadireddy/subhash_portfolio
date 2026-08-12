@@ -190,7 +190,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
               text={project.title}
               className="text-[clamp(1.8rem,7vw,3rem)] md:text-7xl font-extrabold"
             />
-            {(project.keyFeatures?.length || project.roleModules?.length) ? (
+            {(project.keyFeatures?.length || project.roleModules?.length || project.techCategories?.length || project.zeroStorageConcept) ? (
               <Link
                 href={`/projects/${project.slug}/details`}
                 className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold rounded-full bg-[#1a1a18] border border-[#2a2a28] text-[#a29e9a] hover:text-white hover:border-[#0c6145] hover:bg-[#0c6145]/10 transition-all duration-300 shadow-md cursor-pointer"
